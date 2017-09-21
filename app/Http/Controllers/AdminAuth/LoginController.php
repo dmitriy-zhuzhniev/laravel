@@ -2,45 +2,15 @@
 
 namespace App\Http\Controllers\AdminAuth;
 
+use App\Application\Admin\AdminLogout;
+use App\Application\Admin\SignInAsAdmin;
+use App\Domain\Admin\AdminNotActive;
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Support\Facades\Auth;
-use Hesto\MultiAuth\Traits\LogsoutGuard;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
-
-    use AuthenticatesUsers, LogsoutGuard {
-        LogsoutGuard::logout insteadof AuthenticatesUsers;
-    }
-
-    /**
-     * Where to redirect users after login / registration.
-     *
-     * @var string
-     */
-    public $redirectTo = '/admin/home';
-
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('admin.guest', ['except' => 'logout']);
-    }
-
     /**
      * Show the application's login form.
      *
@@ -51,13 +21,41 @@ class LoginController extends Controller
         return view('admin.auth.login');
     }
 
-    /**
-     * Get the guard to be used during authentication.
-     *
-     * @return \Illuminate\Contracts\Auth\StatefulGuard
-     */
-    protected function guard()
+    public function login(Request $request)
     {
-        return Auth::guard('admin');
+        try {
+            $this->validate($request, [
+                'email' => 'required|email',
+                'password' => 'required',
+            ]);
+
+            $this->dispatch(new SignInAsAdmin(
+                trim($request->input('email')),
+                $request->input('password')
+            ));
+
+            return redirect('admin');
+        } catch (AuthorizationException $e) {
+
+            return redirect(route('admin.login.form'))
+                ->withInput($request->only('email', 'remember'))
+                ->withErrors([
+                    'email' => 'These credentials do not match our records.',
+                ]);
+        } catch (AdminNotActive $e) {
+
+            return redirect(route('admin.login.show'))
+                ->withInput($request->only('email', 'remember'))
+                ->withErrors([
+                    'email' => 'This user has not confirm email.',
+                ]);
+        }
+    }
+
+    public function logout()
+    {
+        $this->dispatch(new AdminLogout());
+
+        return redirect(route('admin.login.show'));
     }
 }

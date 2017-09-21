@@ -1,0 +1,24 @@
+App\Domain\Admin\Admin:
+  type: entity
+  table: admins
+  id:
+    id:
+      type: integer
+      generator:
+        strategy: NONE
+  fields:
+    name:
+      type: string
+      column: name
+    email:
+      type: string
+      column: email
+    rememberToken:
+      type: string
+      column: remember_token
+    hashedPassword:
+      type: string
+      column: password
+    deletedAt:
+      type: datetimetz
+      column: deleted_at

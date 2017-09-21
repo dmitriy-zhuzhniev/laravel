@@ -162,7 +162,9 @@ return [
         Illuminate\Session\SessionServiceProvider::class,
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
-        Illuminate\View\ViewServiceProvider::class,LaravelDoctrine\ORM\DoctrineServiceProvider::class,
+        Illuminate\View\ViewServiceProvider::class,
+        LaravelDoctrine\ORM\DoctrineServiceProvider::class,
+        App\Providers\DomainServiceProvider::class,
 
         /*
          * Package Service Providers...

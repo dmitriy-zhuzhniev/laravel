@@ -1,7 +1,7 @@
 @extends('admin.layout.auth')
 
 @section('content')
-    <form method="POST" action="{{ route('login') }}">
+    <form method="POST" action="{{ route('admin.login') }}">
         {{ csrf_field() }}
         <div class="card card-login card-hidden">
             <div class="card-header text-center">
