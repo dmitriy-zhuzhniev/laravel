@@ -14,3 +14,9 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::group(['prefix' => 'admin'], function () {
+  Route::get('/login', 'AdminAuth\LoginController@showLoginForm')->name('login.form');
+  Route::post('/login', 'AdminAuth\LoginController@login')->name('login');
+  Route::post('/logout', 'AdminAuth\LoginController@logout')->name('logout');
+});

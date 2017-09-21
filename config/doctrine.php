@@ -23,13 +23,13 @@ return [
     'managers'                   => [
         'default' => [
             'dev'           => env('APP_DEBUG'),
-            'meta'          => env('DOCTRINE_METADATA', 'annotations'),
+            'meta'          => env('DOCTRINE_METADATA', 'yaml'),
             'connection'    => env('DB_CONNECTION', 'mysql'),
             'namespaces'    => [
                 'App'
             ],
             'paths'         => [
-                base_path('app')
+                resource_path('mappings')
             ],
             'repository'    => Doctrine\ORM\EntityRepository::class,
             'proxies'       => [
@@ -74,7 +74,7 @@ return [
             |--------------------------------------------------------------------------
             */
             'mapping_types' => [
-                //'enum' => 'string'
+                'enum' => 'string'
             ]
         ]
     ],

@@ -22,7 +22,7 @@
             }
 
             .full-height {
-                height: 100vh;
+                height: john.doe@test.com100vh;
             }
 
             .flex-center {
