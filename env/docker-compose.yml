@@ -1,0 +1,58 @@
+version: '2.1'
+
+services:
+  php-fpm:
+    build: ./build/php-fpm
+    container_name: php-fpm
+    restart: always
+    ports:
+      - 9000:9000
+    volumes:
+      - ./conf/php/xdebug.ini:/etc/php/7.4/mods-available/xdebug.ini:delegated
+      - ../src/:/var/www/current/:delegated
+      - ~/.composer:/home/www/.composer:delegated
+    environment:
+      XDEBUG_ENABLED: 1
+      REDIS_ENABLED: 1
+
+  nginx:
+    build: ./build/nginx
+    container_name: nginx
+    restart: always
+    links:
+      - php-fpm
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ../src:/var/www/current/:delegated
+      - ./volumes/nginx/log:/var/log/nginx/:delegated
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    ports:
+      - 3309:3306
+    volumes:
+      - ./volumes/mysql:/var/lib/mysql:delegated
+      - ./conf/mysql/init:/docker-entrypoint-initdb.d:delegated
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+
+  redis:
+    container_name: redis
+    image: redis:6.0
+    restart: always
+
+
+
+

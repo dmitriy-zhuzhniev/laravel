@@ -1,0 +1,6 @@
+#!/bin/sh
+
+LOG_FILE=/tmp/launcher.log
+
+# Launch nginx
+/usr/sbin/nginx -g "daemon off;"

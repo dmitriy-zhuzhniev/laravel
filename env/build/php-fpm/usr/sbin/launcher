@@ -1,0 +1,21 @@
+#!/bin/sh
+
+if [ "$XDEBUG_ENABLED" = false ]
+then
+ echo "disable php-xdebug"
+ phpdismod xdebug
+fi
+
+if [ "$POSTGRESQL_ENABLED" = false ]
+then
+ echo "disable php-pgsql"
+ phpdismod pgsql
+fi
+
+if [ "$REDIS_ENABLED" = false ]
+then
+ echo "disable php-redis"
+ phpdismod pgsql
+fi
+
+php-fpm7.4 -F
