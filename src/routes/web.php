@@ -1,9 +1,9 @@
 <?php
 
-use App\Http\Controllers\AdminAuthController;
+use App\Components\Store\Repositories\StoreRepositoryContract;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookController;
-use Carbon\Carbon;
+use App\Http\Controllers\LibraryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,17 +17,37 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
+Route::get('/', function (StoreRepositoryContract $storeRepository) {
+//    $store = $storeRepository->byId(1);
+//
+//    if (!$store->isActive()) {
+//        abort(404);
+//    }
 
+//    $book = \App\Models\Book::first();
+//
+//    \App\Events\BookUpdate::dispatch($book);
+//
+//    dd($book);
+
+//    try {
+//        $store = $storeRepository->byId(2);
+//    } catch (Exception $exception) {
+//        dd($exception->getMessage());
+//    }
+//
+//    dd($store);
 });
+
+Route::resource('libraries', LibraryController::class);
 
 Route::get('login', [AuthController::class, 'login'])->name('login-page');
 Route::post('login', [AuthController::class, 'auth'])->name('login');
 
 Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::prefix('books')->middleware('auth')->name('books.')->group(function () {
-    Route::get('/', [BookController::class, 'list'])->name('list');
+Route::prefix('books')->name('books.')->middleware('my-auth:user')->group(function () {
+    Route::get('/', [BookController::class, 'list'])->middleware('token')->name('list');
     Route::get('/create', [BookController::class, 'create'])->name('create');
     Route::get('/{id}', [BookController::class, 'view'])->whereNumber('id')->name('view');
 

@@ -9,8 +9,6 @@ use Illuminate\Support\Str;
 
 class AdminFactory extends Factory
 {
-    use HasFactory;
-
     /**
      * Define the model's default state.
      *

@@ -19,4 +19,9 @@ class Library extends Model
     {
         return $this->belongsToMany(User::class)->wherePivot('status', UserStatus::ACTIVE);
     }
+
+    public function isActive()
+    {
+        return in_array($this->status, [2,3]);
+    }
 }
