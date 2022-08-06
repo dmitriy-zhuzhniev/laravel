@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\BookUpdate;
 use App\Repositories\BookRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class BookController extends Controller
 {
@@ -44,6 +44,8 @@ class BookController extends Controller
         ]);
 
         $book = $this->bookRepository->create($data);
+
+        BookUpdate::dispatch($book);
 
         return redirect(route('books.view', ['id' => $book->id]));
     }

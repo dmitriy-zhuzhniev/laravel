@@ -2,6 +2,10 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\AuthMiddleware;
+use App\Http\Middleware\EnsureTokenIsValid;
+use App\Http\Middleware\VerifyClientApiToken;
+use App\Services\Auth\Middleware\UserAuthByToken;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -43,6 +47,7 @@ class Kernel extends HttpKernel
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            VerifyClientApiToken::class,
         ],
     ];
 
@@ -63,5 +68,8 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'auth.api' => UserAuthByToken::class,
+        'token' => EnsureTokenIsValid::class,
+        'my-auth' => AuthMiddleware::class,
     ];
 }
